@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hockey Hub</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div id="loader" class="loader">
+        <div class="puck"></div>
+        <div class="loading-text">Загрузка сайта...</div>
+    </div>
+
+    <div id="content" style="display:none;">
+        <iframe id="hockey-frame"
+                src="about:blank"
+                frameborder="0"
+                allowfullscreen
+                style="width:100%;height:100vh;border:none;"></iframe>
+    </div>
+
+    <script>
+        // Определяем адрес backend
+        const API_URL = (() => {
+            const host = window.location.hostname;
+
+            if (host === 'localhost' || host === '127.0.0.1') {
+                return 'http://127.0.0.1:3000';
+            }
+
+            // Продакшн: подставляется GitHub Actions
+            return '__BACKEND_URL__';  // плейсхолдер
+        })();
+
+        async function init() {
+            const loader = document.getElementById('loader');
+            const content = document.getElementById('content');
+            const frame = document.getElementById('hockey-frame');
+
+            try {
+                const res = await fetch(`${API_URL}/health`, {
+                    method: 'GET',
+                    mode: 'cors'
+                });
+                if (!res.ok) throw new Error('Backend unavailable');
+
+                frame.src = API_URL + '/';
+
+                frame.addEventListener('load', () => {
+                    loader.style.display = 'none';
+                    content.style.display = 'block';
+                });
+
+            } catch (e) {
+                console.error(e);
+                loader.innerHTML = `
+                    <div class="error">
+                        <h2>❌ Ошибка подключения</h2>
+                        <p>Не удалось загрузить сайт. Попробуйте позже.</p>
+                        <button onclick="location.reload()">Обновить</button>
+                    </div>
+                `;
+            }
+        }
+
+        window.addEventListener('DOMContentLoaded', init);
+    </script>
+</body>
+</html>

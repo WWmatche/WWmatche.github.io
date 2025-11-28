@@ -1,0 +1,39 @@
+html, body {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+    background: #000;
+}
+
+body {
+    display: block;
+}
+
+/* контейнер, в котором iframe */
+#content {
+    position: fixed;
+    inset: 0;
+    padding: 0;
+    max-width: none;
+}
+
+/* iframe с сайтом */
+#hockey-frame {
+    width: 100%;
+    height: 100%;
+    border: none;
+    display: block;
+}
+
+/* лоадер поверх всего экрана */
+.loader {
+    position: fixed;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background: radial-gradient(circle at top, #667eea, #000);
+    color: #fff;
+}
